@@ -1,7 +1,8 @@
+import { CreateCommentDto } from './dto/create-comment.dto';
 import { ObjectId } from 'mongoose';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { TrackService } from "./track.service";
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 
 
 @Controller('/tracks')
@@ -16,15 +17,21 @@ export class TrackController {
 
   @Get()
   getAll() {
-    return this.trackService.getAll()
+    return this.trackService.getAll();
   }
 
   @Get(':id')
   getOne(@Param('id') id: ObjectId) {
-    return this.trackService.getOne(id)
+    return this.trackService.getOne(id);
   }
 
-  delete() {
+  @Delete(':id')
+  delete(@Param('id') id: ObjectId) {
+    return this.trackService.delete(id);
+  }
 
+  @Post('/comment')
+  addComment(@Body() dto: CreateCommentDto) {
+    return this.trackService.addComment(dto);
   }
 }
