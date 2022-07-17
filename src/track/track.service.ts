@@ -1,3 +1,4 @@
+import { FileService, FileType } from './../file/file.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { Comment, CommentDocument } from './schemas/comment.schema';
 import { Track, TrackDocument } from './schemas/track.schema';
@@ -12,10 +13,13 @@ export class TrackService {
   constructor(
     @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    private fileservice: FileService
   ) {}
 
-  async create(dto: CreateTrackDto): Promise<Track> {
-    const track = await this.trackModel.create({...dto, listens: 0})
+  async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
+    const audioPath = this.fileservice.createFile(FileType.AUDIO, audio);
+    const picturePath = this.fileservice.createFile(FileType.IMAGE, picture);
+    const track = await this.trackModel.create({...dto, listens: 0});
     return track;
   }
 
